@@ -17,35 +17,62 @@
 
 <style>
 	.switch {
-		@apply inline-block relative align-middle cursor-pointer select-none bg-transparent;
+		display: inline-block;
+		position: relative;
+		align-items: middle;
+		cursor: pointer;
+		user-select: none;
+		background-color: transparent;
 	}
 
 	.track {
-		@apply block w-12 h-6 bg-gray-600 rounded-full shadow-inner;
+		display: block;
+		width: 3rem; /* w-12 */
+		height: 1.5rem; /* h-6 */
+		background-color: #718096; /* bg-gray-600 */
+		border-radius: 9999px; /* rounded-full */
+		box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); /* shadow-inner */
 	}
 
 	.thumb {
-		@apply block transition-all duration-300 ease-in-out absolute top-0 left-0 w-6 h-6 bg-white border-2 border-gray-600 rounded-full;
+		display: block;
+		transition-property: all;
+		transition-duration: 300ms;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1.5rem; /* w-6 */
+		height: 1.5rem; /* h-6 */
+		background-color: #fff; /* bg-white */
+		border-width: 2px; /* border-2 */
+		border-color: #718096; /* border-gray-600 */
+		border-radius: 9999px; /* rounded-full */
 	}
 
 	input[type='checkbox']:checked ~ .thumb {
-		@apply transform translate-x-full border-primary;
+		transform: translateX(100%);
+		border-color: #3182ce; /* border-primary */
 	}
 
 	input[type='checkbox']:checked ~ .track {
-		@apply transform transition-colors bg-primary;
+		transform: transform;
+		transition-property: colors;
+		background-color: #3182ce; /* bg-primary */
 	}
 
 	input[type='checkbox']:disabled ~ .track {
-		@apply bg-gray-500;
+		background-color: #a0aec0; /* bg-gray-500 */
 	}
 
 	input[type='checkbox']:disabled ~ .thumb {
-		@apply bg-gray-100 border-gray-500;
+		background-color: #f7fafc; /* bg-gray-100 */
+		border-color: #a0aec0; /* border-gray-500 */
 	}
 
 	input[type='checkbox']:focus + .track,
 	input[type='checkbox']:active + .track {
-		@apply outline-none shadow-outline;
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); /* shadow-outline */
 	}
 </style>

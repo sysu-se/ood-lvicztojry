@@ -50,6 +50,7 @@
 					      disabled={$gamePaused}
 					      selected={isSelected($cursor, x, y)}
 					      userNumber={true} 
+					      <!-- 在新的架构中，所有用户输入都会通过领域对象处理 -->
 					      sameArea={computeSameArea(isSelected($cursor, x, y), $cursor, x, y, $settings)}
 					      sameNumber={$settings.highlightSame && value && !isSelected($cursor, x, y) && getValueAtCursor($userGrid, $cursor) === value}
 					      conflictingNumber={$settings.highlightConflicting && $userGrid[y][x] === 0 && $invalidCells.includes(`${x},${y}`)} />

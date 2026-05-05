@@ -2,19 +2,26 @@
 	import { onMount } from 'svelte';
 	import { BASE_URL } from '@sudoku/constants';
 	import { modal } from '@sudoku/stores/modal';
-	import { grid } from '@sudoku/stores/grid';
+	import { userGrid } from '@sudoku/stores/grid';
+	import { encodeSudoku } from '@sudoku/sencode';
 	import Clipboard from '../../Utils/Clipboard.svelte';
 
 	export let data = {};
 	export let hideModal;
 
-	const sencode = grid.getSencode($grid);
+	let sencode;
+	let link;
+	let encodedLink;
+	let facebookLink;
+	let twitterLink;
+	let mailToLink;
 
-	const link = BASE_URL + '#' + sencode;
-	const encodedLink = encodeURIComponent(link);
-	const facebookLink = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedLink;
-	const twitterLink = 'https://twitter.com/intent/tweet?text=Check%20out%20this%20Sudoku%20puzzle!&url=' + encodedLink;
-	const mailToLink = 'mailto:?subject=A%20Sudoku%20puzzle%20for%20you&body=Here%27s%20a%20link%20to%20a%20Sudoku%20puzzle%20on%20sudoku.jonasgeiler.com%3A%0A%0A' + encodedLink;
+	$: sencode = encodeSudoku($userGrid);
+	$: link = BASE_URL + '#' + sencode;
+	$: encodedLink = encodeURIComponent(link);
+	$: facebookLink = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedLink;
+	$: twitterLink = 'https://twitter.com/intent/tweet?text=Check%20out%20this%20Sudoku%20puzzle!&url=' + encodedLink;
+	$: mailToLink = 'mailto:?subject=A%20Sudoku%20puzzle%20for%20you&body=Here%27s%20a%20link%20to%20a%20Sudoku%20puzzle%20on%20sudoku.jonasgeiler.com%3A%0A%0A' + encodedLink;
 
 	let copyText;
 
@@ -26,7 +33,7 @@
 	onMount(() => {
 		let canShare = false;
 		const shareData = {
-			url: link,
+			url: $link || link,
 			title: 'Sudoku',
 			text: 'Create & play Sudoku puzzles for free online on sudoku.jonasgeiler.com!'
 		};
@@ -48,17 +55,17 @@
 <div class="flex justify-between items-center mb-6">
 	<h1 class="text-3xl font-semibold leading-none">Share Sudoku</h1>
 
-	<div class="cursor-pointer" on:click={hideModal}>
+	<button class="cursor-pointer" on:click={hideModal} on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') hideModal(); }}>
 		<svg class="icon-outline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 		</svg>
-	</div>
+	</button>
 </div>
 
 <div class="code-container">
 	<input class="input code-field" type="text" readonly value={sencode} on:click={e => select(e.target)}>
 
-	<button class="btn btn-copy" on:click={copyText(sencode)}>
+	<button class="btn btn-copy" on:click={() => copyText(sencode)}>
 		<svg class="icon-outline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
 		</svg>
@@ -69,7 +76,7 @@
 
 <div class="flex flex-col space-y-2">
 
-	<a href={link} class="btn btn-small" on:click|preventDefault={copyText(link)}>
+	<a href={link} class="btn btn-small" on:click|preventDefault={() => copyText(link)}>
 		<svg class="icon-outline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
 		</svg>
@@ -114,34 +121,39 @@
 
 <style>
 	.code-container {
-		@apply flex flex-col;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.code-field {
-		@apply rounded-b-none font-mono text-center;
+		border-radius: 0 0 0.75rem 0.75rem;
+		font-family: monospace;
+		text-align: center;
 	}
 
 	.btn-copy {
-		@apply p-3 rounded-t-none;
+		padding: 0.75rem;
+		border-radius: 0.75rem 0.75rem 0 0;
 	}
 
-	@screen sm {
+	@media (min-width: 640px) {
 		.code-container {
-			@apply flex-row;
+			flex-direction: row;
 		}
 
 		.code-field {
-			@apply flex-grow rounded-bl-xl rounded-r-none;
+			flex-grow: 1;
+			border-radius: 0.75rem 0 0 0.75rem;
 		}
 
 		.btn-copy {
-			@apply rounded-tr-xl rounded-l-none;
+			border-radius: 0 0.75rem 0.75rem 0;
 		}
 	}
 
-
 	.btn-share {
-		@apply text-white border-none;
+		color: white;
+		border: none;
 	}
 
 	.btn-share-twitter {

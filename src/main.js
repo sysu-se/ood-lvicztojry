@@ -1,15 +1,16 @@
+import './styles/global.css';
 import App from './App.svelte';
 
-const app = new App({
-	target: document.getElementById('app')
-});
+console.log('main.js: Starting...');
+
+let app;
+try {
+	app = new App({
+		target: document.getElementById('app')
+	});
+	console.log('main.js: App created successfully');
+} catch (error) {
+	console.error('main.js: Error creating app:', error);
+}
 
 export default app;
-
-
-// TODO: Warn when hint not possible
-// TODO: Undo/Redo
-// TODO: Import sudoku
-// TODO: Creator mode
-// TODO: Bug hunt
-// TODO: Announce

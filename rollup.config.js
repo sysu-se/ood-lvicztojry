@@ -1,3 +1,4 @@
+import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import { writeFileSync } from 'fs';
@@ -11,20 +12,6 @@ import sveltePreprocess from 'svelte-preprocess';
 const mode = process.env.NODE_ENV;
 const production = mode === 'production';
 
-const preprocess = sveltePreprocess({
-	postcss:  {
-		plugins: [
-			require('postcss-import'),
-			require('tailwindcss'),
-			require('autoprefixer'),
-			...(production ? [require('postcss-clean')] : []),
-		],
-	},
-	defaults: {
-		style: 'postcss',
-	},
-});
-
 export default {
 	input:   'src/main.js',
 	output:  {
@@ -34,6 +21,13 @@ export default {
 		format:    'iife',
 	},
 	plugins: [
+		// 配置模块别名，解决 @sudoku/* 导入问题
+		alias({
+			entries: [
+				{ find: '@sudoku/', replacement: './src/node_modules/@sudoku/' }
+			]
+		}),
+		
 		copy({
 			targets: [
 				{ src: 'src/template.html', dest: 'dist', rename: 'index.html' },
@@ -46,21 +40,19 @@ export default {
 				// enable run-time checks when not in production
 				dev: !production,
 			},
-
-			// preprocess svelte files
-			preprocess,
+			// 使用基本的预处理器配置
+			preprocess: sveltePreprocess({
+				postcss: {
+					plugins: [
+						require('tailwindcss'),
+						require('autoprefixer'),
+					],
+				},
+			}),
 		}),
 
 		css({
-			output: !production ? 'bundle.css' : (styles, styleNodes) => {
-				for (let filename of Object.keys(styleNodes)) {
-					if (filename.endsWith('App.css')) {
-						writeFileSync('./dist/critical.css', styleNodes[filename]);
-					}
-				}
-
-				writeFileSync('./dist/bundle.css', styles);
-			},
+			output: 'bundle.css',
 		}),
 
 		// If you have external dependencies installed from

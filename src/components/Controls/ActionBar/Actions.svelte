@@ -1,5 +1,5 @@
 <script>
-	import { userGrid, canUndo, canRedo, isExploring, isConflicted, isInExploration, applyHint, enterExploration, exitExploration, submitExploration } from '@sudoku/stores/grid';
+	import { userGrid, canUndo, canRedo, isExploring, isConflicted, isInExploration, applyHint, enterExploration, exitExploration, submitExploration, undo, redo } from '@sudoku/stores/grid';
 	import { cursor } from '@sudoku/stores/cursor';
 	import { hints } from '@sudoku/stores/hints';
 	import { notes } from '@sudoku/stores/notes';
@@ -16,11 +16,11 @@
 	}
 
 	function handleUndo() {
-		userGrid.undo();
+		undo();
 	}
 
 	function handleRedo() {
-		userGrid.redo();
+		redo();
 	}
 
 	function toggleExploration() {
@@ -93,20 +93,33 @@
 
 <style>
 	.action-buttons {
-		@apply flex flex-wrap justify-evenly self-end;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		align-self: flex-end;
 	}
 
 	.btn-badge {
-		@apply relative;
+		position: relative;
 	}
 
 	.badge {
 		min-height: 20px;
 		min-width:  20px;
-		@apply p-1 rounded-full leading-none text-center text-xs text-white bg-gray-600 inline-block absolute top-0 left-0;
+		padding: 0.25rem; /* p-1 */
+		border-radius: 9999px; /* rounded-full */
+		line-height: 1; /* leading-none */
+		text-align: center;
+		font-size: 0.75rem; /* text-xs */
+		color: white; /* text-white */
+		background-color: #718096; /* bg-gray-600 */
+		display: inline-block;
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 
 	.badge-primary {
-		@apply bg-primary;
+		background-color: #3182ce; /* bg-primary */
 	}
 </style>

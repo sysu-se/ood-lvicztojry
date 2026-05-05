@@ -477,6 +477,17 @@ export function createGame({ sudoku, history = [], undoStack = [], exploring = f
       return isExploring;
     },
 
+    // 重置探索模式（保留当前状态作为新的探索起点）
+    resetExploration() {
+      if (!isExploring) return; // 不在探索模式中
+      
+      // 将当前状态设置为新的探索起点
+      explorationStartSudoku = currentSudoku.clone();
+      explorationMoves = []; // 清空探索历史，但保持在探索模式中
+      
+      notify();
+    },
+
     // HW2: 检查当前局面是否冲突（无法继续）
     isConflicted() {
       // 如果存在空格但没有任何候选数，则局面冲突

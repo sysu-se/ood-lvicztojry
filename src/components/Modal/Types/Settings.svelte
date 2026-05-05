@@ -63,6 +63,6 @@
 	}
 
 	.number-input:focus {
-		@apply outline-none shadow-outline;
+		@apply outline-none ring-2 ring-blue-500;
 	}
 </style>

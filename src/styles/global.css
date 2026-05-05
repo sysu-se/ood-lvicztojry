@@ -32,7 +32,7 @@ body {
 }
 
 .btn:focus {
-	@apply outline-none shadow-outline;
+	@apply outline-none ring-2 ring-blue-500;
 }
 
 .btn:disabled {
@@ -47,36 +47,3 @@ body {
 .btn-small {
 	@apply px-5 py-3 text-lg;
 }
-
-
-.btn-primary {
-	@apply border-transparent text-white bg-primary;
-}
-
-.btn-primary:hover {
-	@apply bg-primary-dark;
-}
-
-.btn-primary:active {
-	@apply bg-primary-darker;
-}
-
-
-.icon-outline {
-	@apply h-6 inline;
-}
-
-.icon-solid {
-	@apply h-5 inline
-}
-
-
-.input {
-	@apply p-3 rounded-xl bg-gray-300 text-2xl text-gray-700;
-}
-
-.input:focus {
-	@apply outline-none shadow-outline;
-}
-
-@tailwind utilities;
